@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html ng-app="studentEventApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Event Registration</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .container {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            border-bottom: 4px solid #ffc107;
+        }
+
+        .event-badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ffc107;
+            transition: width 0.3s ease;
+        }
+
+        .form-wrapper {
+            padding: 50px 40px;
+        }
+
+        .alert {
+            padding: 16px 18px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert-error {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0e0e0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row.triple {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        label .required {
+            color: #e53935;
+            margin-left: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #fafafa;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select {
+            height: 44px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            background: white;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        input.ng-invalid.ng-touched,
+        select.ng-invalid.ng-touched {
+            border-color: #e53935;
+            background: #ffebee;
+        }
+
+        input.ng-valid.ng-touched,
+        select.ng-valid.ng-touched {
+            border-color: #43a047;
+            background: #f1f8f4;
+        }
+
+        .validation-message {
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .error-message {
+            color: #e53935;
+        }
+
+        .success-message {
+            color: #43a047;
+        }
+
+        input.ng-invalid.ng-touched ~ .validation-message.error-message,
+        select.ng-invalid.ng-touched ~ .validation-message.error-message {
+            display: block;
+        }
+
+        input.ng-valid.ng-touched ~ .validation-message.success-message {
+            display: block;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #2a5298;
+        }
+
+        .checkbox-item label,
+        .radio-item label {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .checkbox-item label:hover,
+        .radio-item label:hover {
+            color: #2a5298;
+        }
+
+        .checkbox-item a,
+        .radio-item a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-item a:hover,
+        .radio-item a:hover {
+            text-decoration: underline;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .submit-btn,
+        .reset-btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            flex: 1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(42, 82, 152, 0.4);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .reset-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2a5298;
+            padding: 16px 18px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #1565c0;
+        }
+
+        .success-screen {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 48px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(67, 160, 71, 0.3);
+        }
+
+        .success-screen h2 {
+            font-size: 28px;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .success-screen p {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .confirmation-number {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 2px dashed #2a5298;
+        }
+
+        .confirmation-number label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .confirmation-number .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2a5298;
+            font-family: 'Courier New', monospace;
+        }
+
+        .button-group.center {
+            flex-direction: column;
+        }
+
+        .button-group.center .submit-btn {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-row.triple {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .header {
+                padding: 40px 25px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .form-wrapper {
+                padding: 35px 25px;
+            }
+
+            .container {
+                border-radius: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .form-wrapper {
+                padding: 25px 20px;
+            }
+
+            .section-title {
+                font-size: 14px;
+            }
+
+            .form-row {
+                gap: 15px;
+            }
+
+            .submit-btn,
+            .reset-btn {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container" ng-controller="StudentEventController">
+            <!-- Success Screen -->
+            <div ng-if="registrationSuccess">
+                <div class="header">
+                    <div class="event-badge">Registration Complete</div>
+                    <h1>Thank You for Registering!</h1>
+                </div>
+
+                <div class="success-screen">
+                    <div class="success-icon">✓</div>
+                    <h2>Registration Confirmed</h2>
+                    <p>Your registration for the event has been successfully submitted.</p>
+                    <p>A confirmation email has been sent to <strong>{{ formData.email }}</strong></p>
+
+                    <div class="confirmation-number">
+                        <label>Confirmation Number</label>
+                        <div class="number">{{ confirmationNumber }}</div>
+                    </div>
+
+                    <p style="color: #666; font-size: 13px; margin-top: 20px;">
+                        Please save your confirmation number. You will need it for event check-in.
+                    </p>
+
+                    <div class="button-group center" style="margin-top: 35px;">
+                        <button class="submit-btn" ng-click="resetForm()" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                            Register Another Student
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div ng-if="!registrationSuccess">
+                <div class="header">
+                    <div class="event-badge">Student Registration</div>
+                    <h1>Annual Tech Summit 2024</h1>
+                    <p>Register now to secure your spot at this year's event</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" ng-style="{ 'width': formProgress + '%' }"></div>
+                </div>
+
+                <div class="form-wrapper">
+                    <!-- Error Alert -->
+                    <div class="alert alert-error" ng-class="{ show: showError }">
+                        {{ errorMessage }}
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="info-box">
+                        <strong>📋 Note:</strong> Please ensure all information is accurate. You will receive a confirmation email with event details.
+                    </div>
+
+                    <form name="registrationForm" ng-submit="submitForm(registrationForm.$valid)" novalidate>
+                        <!-- Section 1: Personal Information -->
+                        <div class="form-section">
+                            <div class="section-title">Personal Information</div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="firstName" 
+                                        name="firstName"
+                                        ng-model="formData.firstName"
+                                        required
+                                        minlength="2"
+                                        placeholder="John">
+                                    <div class="validation-message error-message" ng-show="registrationForm.firstName.$error.required">
+                                        First name is required
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastName">Last Name <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="lastName" 
+                                        name="lastName"
+                                        ng-model="formData.lastName"
+                                        required
+                                        minlength="2"
+                                        placeholder="Doe">
+                                    <div class="validation-message error-message" ng-show="registrationForm.lastName.$error.required">
+                                        Last name is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row full">
+                                <div class="form-group">
+                                    <label for="email">Email Address <span class="required">*</span></label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email"
+                                        ng-model="formData.email"
+                                        required
+                                        placeholder="john.doe@university.edu">
+                                    <div class="validation-message error-message" ng-show="registrationForm.email.$error.required">
+                                        Email is required
+                                    </div>
+                                    <div class="validation-message error-message" ng-show="registrationForm.email.$error.email">
+                                        Please enter a valid email address
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number <span class="required">*</span></label>
+                                    <input 
+                                        type="tel" 
+                                        id="phone" 
+                                        name="phone"
+                                        ng-model="formData.phone"
+                                        required
+                                        placeholder="+91 (xxx) xxx-xxxx">
+                                    <div class="validation-message error-message" ng-show="registrationForm.phone.$error.required">
+                                        Phone number is required
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="gender">Gender <span class="required">*</span></label>
+                                    <select 
+                                        id="gender" 
+                                        name="gender"
+                                        ng-model="formData.gender"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                    <div class="validation-message error-message" ng-show="registrationForm.gender.$error.required">
+                                        Please select gender
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Academic Information -->
+                        <div class="form-section">
+                            <div class="section-title">Academic Information</div>
+
+                            <div class="form-row triple">
+                                <div class="form-group">
+                                    <label for="rollNumber">Roll Number <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="rollNumber" 
+                                        name="rollNumber"
+                                        ng-model="formData.rollNumber"
+                                        required
+                                        placeholder="2024-001">
+                                    <div class="validation-message error-message" ng-show="registrationForm.rollNumber.$error.required">
+                                        Roll number is required
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="enrollmentId">Enrollment ID <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="enrollmentId" 
+                                        name="enrollmentId"
+                                        ng-model="formData.enrollmentId"
+                                        required
+                                        placeholder="EN-2024-12345">
+                                    <div class="validation-message error-message" ng-show="registrationForm.enrollmentId.$error.required">
+                                        Enrollment ID is required
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="year">Academic Year <span class="required">*</span></label>
+                                    <select 
+                                        id="year" 
+                                        name="year"
+                                        ng-model="formData.year"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="1st">1st Year</option>
+                                        <option value="2nd">2nd Year</option>
+                                        <option value="3rd">3rd Year</option>
+                                        <option value="4th">4th Year</option>
+                                    </select>
+                                    <div class="validation-message error-message" ng-show="registrationForm.year.$error.required">
+                                        Academic year is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="department">Department/Program <span class="required">*</span></label>
+                                    <select 
+                                        id="department" 
+                                        name="department"
+                                        ng-model="formData.department"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="cse">Computer Science & Engineering</option>
+                                        <option value="it">Information Technology</option>
+                                        <option value="ece">Electronics & Communication</option>
+                                        <option value="mechanical">Mechanical Engineering</option>
+                                        <option value="civil">Civil Engineering</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="validation-message error-message" ng-show="registrationForm.department.$error.required">
+                                        Department is required
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="college">College Name <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="college" 
+                                        name="college"
+                                        ng-model="formData.college"
+                                        required
+                                        placeholder="Your College Name">
+                                    <div class="validation-message error-message" ng-show="registrationForm.college.$error.required">
+                                        College name is required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Event Details -->
+                        <div class="form-section">
+                            <div class="section-title">Event Preferences</div>
+
+                            <div class="form-row full">
+                                <div class="form-group">
+                                    <label>Preferred Session <span class="required">*</span></label>
+                                    <div class="radio-group">
+                                        <div class="radio-item">
+                                            <input type="radio" id="session1" name="session" value="morning" ng-model="formData.session" required>
+                                            <label for="session1">Morning Session (9:00 AM - 12:00 PM)</label>
+                                        </div>
+                                        <div class="radio-item">
+                                            <input type="radio" id="session2" name="session" value="afternoon" ng-model="formData.session" required>
+                                            <label for="session2">Afternoon Session (2:00 PM - 5:00 PM)</label>
+                                        </div>
+                                        <div class="radio-item">
+                                            <input type="radio" id="session3" name="session" value="both" ng-model="formData.session" required>
+                                            <label for="session3">Both Sessions (Full Day)</label>
+                                        </div>
+                                    </div>
+                                    <div class="validation-message error-message" ng-show="registrationForm.session.$error.required">
+                                        Please select a session
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row full">
+                                <div class="form-group">
+                                    <label>Track Preference <span class="required">*</span></label>
+                                    <div class="radio-group">
+                                        <div class="radio-item">
+                                            <input type="radio" id="track1" name="track" value="web" ng-model="formData.track" required>
+                                            <label for="track1">Web & Cloud Technologies</label>
+                                        </div>
+                                        <div class="radio-item">
+                                            <input type="radio" id="track2" name="track" value="ai" ng-model="formData.track" required>
+                                            <label for="track2">Artificial Intelligence & ML</label>
+                                        </div>
+                                        <div class="radio-item">
+                                            <input type="radio" id="track3" name="track" value="iot" ng-model="formData.track" required>
+                                            <label for="track3">IoT & Embedded Systems</label>
+                                        </div>
+                                        <div class="radio-item">
+                                            <input type="radio" id="track4" name="track" value="cyber" ng-model="formData.track" required>
+                                            <label for="track4">Cybersecurity</label>
+                                        </div>
+                                    </div>
+                                    <div class="validation-message error-message" ng-show="registrationForm.track.$error.required">
+                                        Please select a track
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dietaryPreference">Dietary Preference <span class="required">*</span></label>
+                                    <select 
+                                        id="dietaryPreference" 
+                                        name="dietaryPreference"
+                                        ng-model="formData.dietaryPreference"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="vegetarian">Vegetarian</option>
+                                        <option value="non-vegetarian">Non-Vegetarian</option>
+                                        <option value="vegan">Vegan</option>
+                                        <option value="no-preference">No Preference</option>
+                                    </select>
+                                    <div class="validation-message error-message" ng-show="registrationForm.dietaryPreference.$error.required">
+                                        Please select dietary preference
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tshirtSize">T-Shirt Size <span class="required">*</span></label>
+                                    <select 
+                                        id="tshirtSize" 
+                                        name="tshirtSize"
+                                        ng-model="formData.tshirtSize"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="xs">Extra Small (XS)</option>
+                                        <option value="s">Small (S)</option>
+                                        <option value="m">Medium (M)</option>
+                                        <option value="l">Large (L)</option>
+                                        <option value="xl">Extra Large (XL)</option>
+                                        <option value="xxl">XXL</option>
+                                    </select>
+                                    <div class="validation-message error-message" ng-show="registrationForm.tshirtSize.$error.required">
+                                        Please select t-shirt size
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Additional Information -->
+                        <div class="form-section">
+                            <div class="section-title">Additional Information</div>
+
+                            <div class="form-row full">
+                                <div class="form-group">
+                                    <label for="expertise">Your Expertise/Interests</label>
+                                    <textarea 
+                                        id="expertise" 
+                                        name="expertise"
+                                        ng-model="formData.expertise"
+                                        placeholder="Tell us about your technical interests, projects you've worked on, or areas you'd like to explore..."></textarea>
+                                    <div class="field-hint">Optional. Max 300 characters</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row full">
+                                <div class="form-group">
+                                    <label>Workshop/Hackathon Interest <span class="required">*</span></label>
+                                    <div class="checkbox-group">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="workshop1" name="workshops" value="web-dev" ng-model="formData.workshops.webDev">
+                                            <label for="workshop1">Web Development Workshop</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="workshop2" name="workshops" value="ai-ml" ng-model="formData.workshops.aiMl">
+                                            <label for="workshop2">AI/ML Workshop</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="workshop3" name="workshops" value="hackathon" ng-model="formData.workshops.hackathon">
+                                            <label for="workshop3">Hackathon Event</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="workshop4" name="workshops" value="none" ng-model="formData.workshops.none">
+                                            <label for="workshop4">No workshop preference</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Terms & Conditions -->
+                        <div class="form-section">
+                            <div class="section-title">Terms & Conditions</div>
+
+                            <div class="form-row full">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="terms" name="terms" ng-model="formData.acceptTerms" required>
+                                    <label for="terms">
+                                        I agree to the <a href="#" target="_blank">Terms & Conditions</a> and <a href="#" target="_blank">Privacy Policy</a> <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-row full">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="newsletter" name="newsletter" ng-model="formData.subscribeNewsletter">
+                                    <label for="newsletter">
+                                        Send me updates about future events and opportunities
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="button-group">
+                            <button 
+                                type="submit" 
+                                class="submit-btn"
+                                ng-disabled="registrationForm.$invalid || !formData.acceptTerms">
+                                Submit Registration
+                            </button>
+                            <button 
+                                type="button" 
+                                class="reset-btn"
+                                ng-click="resetForm()">
+                                Clear Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for Angular to be defined
+        if (typeof angular === 'undefined') {
+            document.write('<p style="color: red; padding: 20px; font-size: 16px;">Error: AngularJS library failed to load. Please refresh the page or check your internet connection.</p>');
+        }
+        
+        var app = angular.module('studentEventApp', []);
+
+        app.controller('StudentEventController', function($scope) {
+            $scope.formData = {
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                gender: '',
+                rollNumber: '',
+                enrollmentId: '',
+                year: '',
+                department: '',
+                college: '',
+                session: '',
+                track: '',
+                dietaryPreference: '',
+                tshirtSize: '',
+                expertise: '',
+                workshops: {
+                    webDev: false,
+                    aiMl: false,
+                    hackathon: false,
+                    none: false
+                },
+                acceptTerms: false,
+                subscribeNewsletter: false
+            };
+
+            $scope.registrationSuccess = false;
+            $scope.showError = false;
+            $scope.errorMessage = '';
+            $scope.formProgress = 0;
+            $scope.confirmationNumber = '';
+
+            // Update form progress
+            $scope.$watch('registrationForm.$valid', function() {
+                if ($scope.registrationForm) {
+                    var totalFields = 15;
+                    var validFields = 0;
+
+                    angular.forEach($scope.registrationForm, function(field, name) {
+                        if (name.charAt(0) !== '$' && field.$valid) {
+                            validFields++;
+                        }
+                    });
+
+                    $scope.formProgress = Math.min((validFields / totalFields) * 100, 100);
+                }
+            }, true);
+
+            // Generate confirmation number
+            var generateConfirmationNumber = function() {
+                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                var result = 'CONF-';
+                for (var i = 0; i < 10; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            };
+
+            // Form submission
+            $scope.submitForm = function(isValid) {
+                if (!isValid) {
+                    $scope.showError = true;
+                    $scope.errorMessage = 'Please fill in all required fields correctly before submitting.';
+                    window.scrollTo(0, 0);
+                    return;
+                }
+
+                if (!$scope.formData.acceptTerms) {
+                    $scope.showError = true;
+                    $scope.errorMessage = 'You must accept the Terms & Conditions to proceed.';
+                    return;
+                }
+
+                // Check if at least one workshop is selected
+                var workshopSelected = $scope.formData.workshops.webDev || 
+                                     $scope.formData.workshops.aiMl || 
+                                     $scope.formData.workshops.hackathon || 
+                                     $scope.formData.workshops.none;
+
+                if (!workshopSelected) {
+                    $scope.showError = true;
+                    $scope.errorMessage = 'Please select at least one workshop preference.';
+                    return;
+                }
+
+                // Success
+                $scope.confirmationNumber = generateConfirmationNumber();
+                $scope.registrationSuccess = true;
+                window.scrollTo(0, 0);
+
+                // Log form data (in real app, send to server)
+                console.log('Registration submitted:', $scope.formData);
+                console.log('Confirmation Number:', $scope.confirmationNumber);
+            };
+
+            // Reset form
+            $scope.resetForm = function() {
+                $scope.formData = {
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    gender: '',
+                    rollNumber: '',
+                    enrollmentId: '',
+                    year: '',
+                    department: '',
+                    college: '',
+                    session: '',
+                    track: '',
+                    dietaryPreference: '',
+                    tshirtSize: '',
+                    expertise: '',
+                    workshops: {
+                        webDev: false,
+                        aiMl: false,
+                        hackathon: false,
+                        none: false
+                    },
+                    acceptTerms: false,
+                    subscribeNewsletter: false
+                };
+                $scope.registrationSuccess = false;
+                $scope.showError = false;
+                $scope.formProgress = 0;
+
+                if ($scope.registrationForm) {
+                    $scope.registrationForm.$setPristine();
+                    $scope.registrationForm.$setUntouched();
+                }
+            };
+        });
+    </script>
+</body>
+</html>
