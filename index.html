@@ -1,704 +1,498 @@
 <!DOCTYPE html>
-<html ng-app="registrationApp">
+<html lang="en" ng-app="studentApp">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Registration Form</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: #333;
-        }
+<title>Student Login</title>
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out;
-        }
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+<style>
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
 
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
+body{
 
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 400;
-        }
+height:100vh;
 
-        .form-content {
-            padding: 40px 30px;
-        }
+display:flex;
+justify-content:center;
+align-items:center;
 
-        .form-group {
-            margin-bottom: 24px;
-            animation: fadeIn 0.5s ease-out backwards;
-        }
+background:linear-gradient(135deg,#4facfe,#00f2fe);
 
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-        .form-group:nth-child(4) { animation-delay: 0.4s; }
-        .form-group:nth-child(5) { animation-delay: 0.5s; }
-        .form-group:nth-child(6) { animation-delay: 0.6s; }
+overflow:hidden;
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+}
 
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+body::before{
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="tel"] {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            background: #fafafa;
-        }
+content:"";
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="tel"]:focus {
-            outline: none;
-            background: white;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+position:absolute;
 
-        input.ng-invalid.ng-touched {
-            border-color: #ff6b6b;
-            background: #fff5f5;
-        }
+width:500px;
+height:500px;
 
-        input.ng-valid.ng-touched {
-            border-color: #4caf50;
-            background: #f5fff5;
-        }
+background:#ffffff30;
 
-        .validation-message {
-            font-size: 12px;
-            margin-top: 6px;
-            display: none;
-            font-weight: 500;
-        }
+border-radius:50%;
 
-        .error-message {
-            color: #ff6b6b;
-            display: none;
-        }
+top:-150px;
+left:-120px;
 
-        .success-message {
-            color: #4caf50;
-            display: none;
-        }
+filter:blur(80px);
 
-        input.ng-invalid.ng-touched ~ .validation-message.error-message {
-            display: block;
-        }
+}
 
-        input.ng-valid.ng-touched ~ .validation-message.success-message {
-            display: block;
-        }
+body::after{
 
-        .password-strength {
-            font-size: 12px;
-            margin-top: 6px;
-            display: none;
-        }
+content:"";
 
-        input.ng-dirty[name="password"] ~ .password-strength {
-            display: block;
-        }
+position:absolute;
 
-        .strength-bar {
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
+width:400px;
+height:400px;
 
-        .strength-indicator {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease, background-color 0.3s ease;
-            border-radius: 2px;
-        }
+background:#ffffff20;
 
-        .password-strength.weak .strength-indicator {
-            width: 33%;
-            background-color: #ff6b6b;
-        }
+border-radius:50%;
 
-        .password-strength.medium .strength-indicator {
-            width: 66%;
-            background-color: #ffa726;
-        }
+bottom:-150px;
+right:-100px;
 
-        .password-strength.strong .strength-indicator {
-            width: 100%;
-            background-color: #4caf50;
-        }
+filter:blur(70px);
 
-        .password-strength-text {
-            color: #666;
-            font-size: 12px;
-            font-weight: 500;
-        }
+}
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+.container{
 
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
+position:relative;
 
-        @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
+z-index:10;
 
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
+width:390px;
 
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
+background:rgba(255,255,255,.15);
 
-        .checkbox-group label {
-            margin: 0;
-            font-size: 13px;
-            font-weight: 400;
-            text-transform: none;
-            letter-spacing: normal;
-            cursor: pointer;
-            flex: 1;
-        }
+backdrop-filter:blur(15px);
 
-        .checkbox-group a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
+border-radius:20px;
 
-        .checkbox-group a:hover {
-            text-decoration: underline;
-        }
+padding:35px;
 
-        .submit-btn {
-            width: 100%;
-            padding: 14px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
+box-shadow:0 20px 50px rgba(0,0,0,.2);
 
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
+border:1px solid rgba(255,255,255,.2);
 
-        .submit-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
+animation:fade .6s ease;
 
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+}
 
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #666;
-        }
+@keyframes fade{
 
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
+from{
 
-        .login-link a:hover {
-            text-decoration: underline;
-        }
+opacity:0;
 
-        .success-container {
-            text-align: center;
-            padding: 40px 30px;
-        }
+transform:translateY(40px);
 
-        .success-icon {
-            width: 60px;
-            height: 60px;
-            background: #4caf50;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
-        }
+}
 
-        .success-container h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-        }
+to{
 
-        .success-container p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
+opacity:1;
 
-        .alert {
-            padding: 12px 14px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            display: none;
-        }
+transform:translateY(0);
 
-        .alert.show {
-            display: block;
-        }
+}
 
-        .alert-error {
-            background: #fff5f5;
-            color: #ff6b6b;
-            border: 1px solid #ff6b6b;
-        }
+}
 
-        .alert-success {
-            background: #f5fff5;
-            color: #4caf50;
-            border: 1px solid #4caf50;
-        }
+.logo{
 
-        @media (max-width: 600px) {
-            .container {
-                border-radius: 0;
-            }
+font-size:55px;
 
-            .header {
-                padding: 30px 20px;
-            }
+text-align:center;
 
-            .header h1 {
-                font-size: 24px;
-            }
+margin-bottom:10px;
 
-            .form-content {
-                padding: 30px 20px;
-            }
+}
 
-            .form-group {
-                margin-bottom: 20px;
-            }
-        }
-    </style>
+h2{
+
+text-align:center;
+
+color:white;
+
+margin-bottom:8px;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:white;
+
+font-size:14px;
+
+margin-bottom:30px;
+
+opacity:.9;
+
+}
+
+.form-group{
+
+margin-bottom:20px;
+
+}
+
+label{
+
+display:block;
+
+color:white;
+
+margin-bottom:8px;
+
+font-size:14px;
+
+font-weight:600;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+outline:none;
+
+font-size:15px;
+
+background:white;
+
+}
+
+.password-box{
+
+position:relative;
+
+}
+
+.password-box button{
+
+position:absolute;
+
+right:10px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+border:none;
+
+background:none;
+
+cursor:pointer;
+
+font-size:13px;
+
+font-weight:bold;
+
+color:#0066ff;
+
+}
+
+.options{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+font-size:14px;
+
+color:white;
+
+margin-bottom:25px;
+
+}
+
+.options a{
+
+color:white;
+
+text-decoration:none;
+
+}
+
+.options a:hover{
+
+text-decoration:underline;
+
+}
+
+.login-btn{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+background:#0066ff;
+
+color:white;
+
+font-size:17px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.login-btn:hover{
+
+background:#004fc5;
+
+transform:translateY(-2px);
+
+}
+
+.login-btn:disabled{
+
+background:gray;
+
+cursor:not-allowed;
+
+}
+
+.error{
+
+font-size:13px;
+
+color:#ffd6d6;
+
+margin-top:5px;
+
+}
+
+.footer{
+
+margin-top:25px;
+
+text-align:center;
+
+color:white;
+
+font-size:14px;
+
+}
+
+.footer a{
+
+color:white;
+
+font-weight:bold;
+
+text-decoration:none;
+
+}
+
+.footer a:hover{
+
+text-decoration:underline;
+
+}
+
+@media(max-width:450px){
+
+.container{
+
+width:90%;
+
+padding:25px;
+
+}
+
+}
+
+</style>
+
 </head>
-<body>
-    <div class="container">
-        <div ng-controller="RegistrationController">
-            <!-- Success Message -->
-            <div ng-if="registrationSuccess">
-                <div class="header">
-                    <h1>Welcome!</h1>
-                    <p>Account created successfully</p>
-                </div>
-                <div class="success-container">
-                    <div class="success-icon">✓</div>
-                    <h2>Account Created</h2>
-                    <p>Thank you for registering! Your account has been set up and you can now log in.</p>
-                    <button class="submit-btn" ng-click="resetForm()">Create Another Account</button>
-                </div>
-            </div>
 
-            <!-- Registration Form -->
-            <div ng-if="!registrationSuccess">
-                <div class="header">
-                    <h1>Create Account</h1>
-                    <p>Join us today and get started</p>
-                </div>
+<body ng-controller="LoginController">
 
-                <div class="form-content">
-                    <div class="alert alert-error" ng-class="{ show: showError }">
-                        {{ errorMessage }}
-                    </div>
+<div class="container">
 
-                    <form name="registrationForm" ng-submit="submitForm(registrationForm.$valid)" novalidate>
-                        <!-- Full Name -->
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input 
-                                type="text" 
-                                id="fullName" 
-                                name="fullName"
-                                ng-model="formData.fullName"
-                                required
-                                minlength="3"
-                                placeholder="John Doe">
-                            <div class="validation-message error-message" ng-show="registrationForm.fullName.$error.required">
-                                Full name is required
-                            </div>
-                            <div class="validation-message error-message" ng-show="registrationForm.fullName.$error.minlength">
-                                Name must be at least 3 characters
-                            </div>
-                            <div class="validation-message success-message">✓ Looks good</div>
-                        </div>
+<div class="logo">🎓</div>
 
-                        <!-- Name Row -->
-                        <div class="form-row">
-                            <!-- First Name (for alternative) -->
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input 
-                                    type="text" 
-                                    id="firstName" 
-                                    name="firstName"
-                                    ng-model="formData.firstName"
-                                    placeholder="John">
-                            </div>
+<h2>Student Login</h2>
 
-                            <!-- Last Name (for alternative) -->
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input 
-                                    type="text" 
-                                    id="lastName" 
-                                    name="lastName"
-                                    ng-model="formData.lastName"
-                                    placeholder="Doe">
-                            </div>
-                        </div>
+<p class="subtitle">
+College Management System
+</p>
 
-                        <!-- Email -->
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email"
-                                ng-model="formData.email"
-                                required
-                                placeholder="you@example.com">
-                            <div class="validation-message error-message" ng-show="registrationForm.email.$error.required">
-                                Email is required
-                            </div>
-                            <div class="validation-message error-message" ng-show="registrationForm.email.$error.email">
-                                Please enter a valid email address
-                            </div>
-                            <div class="validation-message success-message">✓ Email valid</div>
-                        </div>
+<form name="loginForm"
+ng-submit="login(loginForm.$valid)"
+novalidate>
 
-                        <!-- Phone Number -->
-                        <div class="form-group">
-                            <label for="phone">Phone Number (Optional)</label>
-                            <input 
-                                type="tel" 
-                                id="phone" 
-                                name="phone"
-                                ng-model="formData.phone"
-                                placeholder="+1 (555) 000-0000">
-                        </div>
+<div class="form-group">
 
-                        <!-- Password -->
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password"
-                                ng-model="formData.password"
-                                ng-change="checkPasswordStrength()"
-                                required
-                                minlength="8"
-                                placeholder="At least 8 characters">
-                            <div class="validation-message error-message" ng-show="registrationForm.password.$error.required">
-                                Password is required
-                            </div>
-                            <div class="validation-message error-message" ng-show="registrationForm.password.$error.minlength">
-                                Password must be at least 8 characters
-                            </div>
-                            <div class="password-strength" ng-class="passwordStrength">
-                                <div class="strength-bar">
-                                    <div class="strength-indicator"></div>
-                                </div>
-                                <div class="password-strength-text">
-                                    Strength: <strong>{{ passwordStrengthText }}</strong>
-                                </div>
-                            </div>
-                        </div>
+<label>Student ID</label>
 
-                        <!-- Confirm Password -->
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm Password</label>
-                            <input 
-                                type="password" 
-                                id="confirmPassword" 
-                                name="confirmPassword"
-                                ng-model="formData.confirmPassword"
-                                required
-                                placeholder="Re-enter your password">
-                            <div class="validation-message error-message" ng-show="registrationForm.confirmPassword.$error.required">
-                                Please confirm your password
-                            </div>
-                            <div class="validation-message error-message" ng-show="passwordsMatch === false && registrationForm.confirmPassword.$dirty">
-                                Passwords do not match
-                            </div>
-                            <div class="validation-message success-message" ng-show="passwordsMatch === true && registrationForm.confirmPassword.$dirty">
-                                ✓ Passwords match</div>
-                        </div>
+<input
+type="text"
+name="studentId"
+placeholder="Enter Student ID"
+ng-model="student.studentId"
+required>
 
-                        <!-- Terms & Conditions -->
-                        <div class="checkbox-group">
-                            <input 
-                                type="checkbox" 
-                                id="terms" 
-                                name="terms"
-                                ng-model="formData.acceptTerms"
-                                required>
-                            <label for="terms">
-                                I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
-                            </label>
-                        </div>
+<div class="error"
+ng-show="loginForm.studentId.$touched && loginForm.studentId.$invalid">
 
-                        <!-- Newsletter Opt-in -->
-                        <div class="checkbox-group">
-                            <input 
-                                type="checkbox" 
-                                id="newsletter" 
-                                name="newsletter"
-                                ng-model="formData.subscribeNewsletter">
-                            <label for="newsletter">
-                                Send me updates and special offers
-                            </label>
-                        </div>
+Student ID is required.
 
-                        <!-- Submit Button -->
-                        <button 
-                            type="submit" 
-                            class="submit-btn"
-                            ng-disabled="registrationForm.$invalid || !passwordsMatch">
-                            Create Account
-                        </button>
-                    </form>
+</div>
 
-                    <!-- Login Link -->
-                    <div class="login-link">
-                        Already have an account? <a href="#">Sign in</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <script>
-        var app = angular.module('registrationApp', []);
+<div class="form-group">
 
-        app.controller('RegistrationController', function($scope) {
-            $scope.formData = {
-                fullName: '',
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-                password: '',
-                confirmPassword: '',
-                acceptTerms: false,
-                subscribeNewsletter: false
-            };
+<label>Password</label>
 
-            $scope.registrationSuccess = false;
-            $scope.showError = false;
-            $scope.errorMessage = '';
-            $scope.passwordsMatch = null;
-            $scope.passwordStrength = '';
-            $scope.passwordStrengthText = '';
+<div class="password-box">
 
-            // Password strength checker
-            $scope.checkPasswordStrength = function() {
-                var password = $scope.formData.password;
-                
-                if (!password) {
-                    $scope.passwordStrength = '';
-                    $scope.passwordStrengthText = '';
-                    return;
-                }
+<input
+type="{{showPassword ? 'text' : 'password'}}"
+name="password"
+placeholder="Enter Password"
+ng-model="student.password"
+required
+minlength="6">
 
-                var strength = 0;
-                var text = '';
+<button
+type="button"
+ng-click="togglePassword()">
 
-                // Check length
-                if (password.length >= 8) strength++;
-                if (password.length >= 12) strength++;
+{{showPassword ? 'Hide' : 'Show'}}
 
-                // Check for lowercase
-                if (/[a-z]/.test(password)) strength++;
+</button>
 
-                // Check for uppercase
-                if (/[A-Z]/.test(password)) strength++;
+</div>
 
-                // Check for numbers
-                if (/[0-9]/.test(password)) strength++;
+<div class="error"
+ng-show="loginForm.password.$touched && loginForm.password.$error.required">
 
-                // Check for special characters
-                if (/[^A-Za-z0-9]/.test(password)) strength++;
+Password is required.
 
-                if (strength <= 2) {
-                    $scope.passwordStrength = 'weak';
-                    text = 'Weak';
-                } else if (strength <= 4) {
-                    $scope.passwordStrength = 'medium';
-                    text = 'Medium';
-                } else {
-                    $scope.passwordStrength = 'strong';
-                    text = 'Strong';
-                }
+</div>
 
-                $scope.passwordStrengthText = text;
-                checkPasswordMatch();
-            };
+<div class="error"
+ng-show="loginForm.password.$error.minlength">
 
-            // Check if passwords match
-            var checkPasswordMatch = function() {
-                if ($scope.formData.password && $scope.formData.confirmPassword) {
-                    $scope.passwordsMatch = $scope.formData.password === $scope.formData.confirmPassword;
-                } else {
-                    $scope.passwordsMatch = null;
-                }
-            };
+Minimum 6 characters.
 
-            $scope.$watch('formData.confirmPassword', function() {
-                checkPasswordMatch();
-            });
+</div>
 
-            // Form submission
-            $scope.submitForm = function(isValid) {
-                if (!isValid) {
-                    $scope.showError = true;
-                    $scope.errorMessage = 'Please fix the errors in the form';
-                    return;
-                }
+</div>
 
-                if (!$scope.passwordsMatch) {
-                    $scope.showError = true;
-                    $scope.errorMessage = 'Passwords do not match';
-                    return;
-                }
+<div class="options">
 
-                if (!$scope.formData.acceptTerms) {
-                    $scope.showError = true;
-                    $scope.errorMessage = 'You must accept the terms and conditions';
-                    return;
-                }
+<label>
 
-                // Simulate API call
-                console.log('Form submitted with data:', $scope.formData);
-                $scope.registrationSuccess = true;
-            };
+<input
+type="checkbox"
+ng-model="student.remember">
 
-            // Reset form
-            $scope.resetForm = function() {
-                $scope.formData = {
-                    fullName: '',
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    phone: '',
-                    password: '',
-                    confirmPassword: '',
-                    acceptTerms: false,
-                    subscribeNewsletter: false
-                };
-                $scope.registrationSuccess = false;
-                $scope.showError = false;
-                $scope.passwordsMatch = null;
-                $scope.passwordStrength = '';
-                $scope.passwordStrengthText = '';
-            };
-        });
-    </script>
+ Remember Me
+
+</label>
+
+<a href="#">Forgot Password?</a>
+
+</div>
+
+<button
+class="login-btn"
+type="submit"
+ng-disabled="loginForm.$invalid">
+
+Login
+
+</button>
+
+</form>
+
+<div class="footer">
+
+Don't have an account?
+
+<a href="#">Contact Admin</a>
+
+</div>
+
+</div>
+
+<script>
+
+var app = angular.module("studentApp", []);
+
+app.controller("LoginController",function($scope){
+
+$scope.student={
+
+studentId:"",
+password:"",
+remember:false
+
+};
+
+$scope.showPassword=false;
+
+$scope.togglePassword=function(){
+
+$scope.showPassword=!$scope.showPassword;
+
+};
+
+$scope.login=function(valid){
+
+if(valid){
+
+alert(
+"Welcome "+$scope.student.studentId+"!"
+);
+
+console.log($scope.student);
+
+}
+
+};
+
+});
+
+</script>
+
 </body>
 </html>
