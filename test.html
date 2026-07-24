@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sign In - Portal</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* Sign In Page Styles */
+        .signin-section {
+            flex: 1;
+            min-width: 300px;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .signin-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 35px;
+            margin: 0 auto 15px;
+            font-weight: bold;
+        }
+
+        .signin-card h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .signin-card p {
+            color: #999;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+
+        .remember-forgot a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .remember-forgot a:hover {
+            color: #764ba2;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .signin-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .signin-btn:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #764ba2;
+        }
+
+        /* Welcome Page Styles */
+        .welcome-section {
+            display: none;
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .welcome-section.active {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            text-align: center;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .welcome-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 0.6s ease-out;
+        }
+
+        .welcome-card h1 {
+            color: #333;
+            font-size: 35px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-card p {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .student-name {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .access-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .access-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .access-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .access-text {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Illustration Section */
+        .illustration-section {
+            flex: 1;
+            display: none;
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .illustration-section.show {
+            display: block;
+        }
+
+        .illustration {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 60px 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            color: white;
+        }
+
+        .illustration-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .illustration h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .illustration p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .signin-card {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+
+            .signin-card h1 {
+                font-size: 24px;
+            }
+
+            .illustration-section {
+                display: block !important;
+                margin-top: 20px;
+            }
+
+            .illustration {
+                padding: 40px 20px;
+            }
+
+            .illustration-icon {
+                font-size: 80px;
+            }
+
+            .illustration h2 {
+                font-size: 22px;
+            }
+
+            .welcome-card {
+                padding: 30px 20px;
+            }
+
+            .welcome-card h1 {
+                font-size: 28px;
+            }
+
+            .quick-access {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signin-card {
+                padding: 20px;
+            }
+
+            .signin-card h1 {
+                font-size: 20px;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .illustration {
+                padding: 30px 15px;
+            }
+
+            .illustration-icon {
+                font-size: 60px;
+            }
+
+            .quick-access {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-emoji {
+                font-size: 60px;
+            }
+
+            .welcome-card h1 {
+                font-size: 24px;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body ng-controller="StudentCtrl">
+    <div class="container">
+        <!-- Sign In Section -->
+        <div class="signin-section" ng-hide="isLoggedIn">
+            <div class="signin-card">
+                <div class="logo-section">
+                    <div class="logo">📚</div>
+                    <h1>Student Portal</h1>
+                    <p>Sign in to access your courses and grades</p>
+                </div>
+
+                <form ng-submit="signIn()" ng-hide="isLoggedIn">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            ng-model="credentials.email" 
+                            placeholder="Enter your email"
+                            required
+                        >
+                        <div class="error-message" ng-show="errors.email" ng-class="{ show: errors.email }">
+                            {{ errors.email }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            ng-model="credentials.password" 
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <div class="error-message" ng-show="errors.password" ng-class="{ show: errors.password }">
+                            {{ errors.password }}
+                        </div>
+                    </div>
+
+                    <div class="remember-forgot">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="remember" ng-model="credentials.remember">
+                            <label for="remember" style="margin: 0; font-weight: 400;">Remember me</label>
+                        </div>
+                        <a href="#forgot">Forgot Password?</a>
+                    </div>
+
+                    <div class="loading" ng-class="{ show: isLoading }">
+                        <div class="spinner"></div>
+                    </div>
+
+                    <button type="submit" class="signin-btn" ng-disabled="isLoading">
+                        {{ isLoading ? 'Signing in...' : 'Sign In' }}
+                    </button>
+
+                    <div class="signup-link">
+                        Don't have an account? <a href="#signup">Create one here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Welcome Section -->
+        <div class="welcome-section" ng-class="{ active: isLoggedIn }">
+            <div class="welcome-card">
+                <div class="welcome-emoji">🎓</div>
+                <h1>Welcome back!</h1>
+                <p>Hello, <span class="student-name">{{ userName }}</span></p>
+                <p>Great to see you today. Let's make it a productive day!</p>
+
+                <div class="quick-access">
+                    <div class="access-card" ng-click="viewDashboard()">
+                        <div class="access-icon">📊</div>
+                        <div class="access-text">Dashboard</div>
+                    </div>
+                    <div class="access-card" ng-click="viewCourses()">
+                        <div class="access-icon">📖</div>
+                        <div class="access-text">Courses</div>
+                    </div>
+                    <div class="access-card" ng-click="viewGrades()">
+                        <div class="access-icon">📝</div>
+                        <div class="access-text">Grades</div>
+                    </div>
+                    <div class="access-card" ng-click="viewAssignments()">
+                        <div class="access-icon">✏️</div>
+                        <div class="access-text">Assignments</div>
+                    </div>
+                    <div class="access-card" ng-click="viewProfile()">
+                        <div class="access-icon">👤</div>
+                        <div class="access-text">Profile</div>
+                    </div>
+                    <div class="access-card" ng-click="viewLibrary()">
+                        <div class="access-icon">📚</div>
+                        <div class="access-text">Library</div>
+                    </div>
+                </div>
+
+                <button class="logout-btn" ng-click="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Illustration Section -->
+        <div class="illustration-section" ng-class="{ show: !isLoggedIn }">
+            <div class="illustration">
+                <div class="illustration-icon">🚀</div>
+                <h2>Welcome to Your Learning Hub</h2>
+                <p>Access your courses, track your progress, and connect with your classmates all in one place.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Angular App Module
+        var app = angular.module('studentApp', []);
+
+        // Student Controller
+        app.controller('StudentCtrl', ['$scope', '$timeout', function($scope, $timeout) {
+            // Initialize variables
+            $scope.credentials = {
+                email: '',
+                password: '',
+                remember: false
+            };
+
+            $scope.errors = {
+                email: '',
+                password: ''
+            };
+
+            $scope.isLoggedIn = false;
+            $scope.isLoading = false;
+            $scope.userName = '';
+
+            // Sign in function
+            $scope.signIn = function() {
+                // Reset errors
+                $scope.errors = {
+                    email: '',
+                    password: ''
+                };
+
+                // Validate email
+                if (!$scope.credentials.email) {
+                    $scope.errors.email = 'Email is required';
+                } else if (!isValidEmail($scope.credentials.email)) {
+                    $scope.errors.email = 'Please enter a valid email address';
+                }
+
+                // Validate password
+                if (!$scope.credentials.password) {
+                    $scope.errors.password = 'Password is required';
+                } else if ($scope.credentials.password.length < 6) {
+                    $scope.errors.password = 'Password must be at least 6 characters';
+                }
+
+                // If no errors, proceed with sign in
+                if (!$scope.errors.email && !$scope.errors.password) {
+                    $scope.isLoading = true;
+
+                    // Simulate API call
+                    $timeout(function() {
+                        $scope.isLoading = false;
+                        
+                        // Extract name from email
+                        var emailParts = $scope.credentials.email.split('@');
+                        var nameParts = emailParts[0].split('.');
+                        $scope.userName = nameParts.map(function(part) {
+                            return part.charAt(0).toUpperCase() + part.slice(1);
+                        }).join(' ');
+
+                        $scope.isLoggedIn = true;
+                    }, 1500);
+                }
+            };
+
+            // Logout function
+            $scope.logout = function() {
+                $scope.isLoggedIn = false;
+                $scope.credentials = {
+                    email: '',
+                    password: '',
+                    remember: false
+                };
+                $scope.userName = '';
+            };
+
+            // Quick access functions
+            $scope.viewDashboard = function() {
+                alert('📊 Dashboard - View your academic overview and statistics');
+            };
+
+            $scope.viewCourses = function() {
+                alert('📖 Courses - Browse and manage your enrolled courses');
+            };
+
+            $scope.viewGrades = function() {
+                alert('📝 Grades - Check your grades and academic performance');
+            };
+
+            $scope.viewAssignments = function() {
+                alert('✏️ Assignments - Submit and track your assignments');
+            };
+
+            $scope.viewProfile = function() {
+                alert('👤 Profile - Update your personal information and settings');
+            };
+
+            $scope.viewLibrary = function() {
+                alert('📚 Library - Access learning resources and study materials');
+            };
+
+            // Email validation helper
+            function isValidEmail(email) {
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+        }]);
+    </script>
+</body>
+</html>
