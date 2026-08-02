@@ -1,0 +1,608 @@
+/* ============================================================
+   GSFC University — Student Registration
+   Theme  :  Forest Green + Warm Cream + Charcoal
+   Fonts  :  Playfair Display (headings) + Inter (body)
+
+   Palette
+   ──────────────────────────────────────────
+   --green        #1E4D3A   deep forest green  (primary)
+   --green-mid    #2A6B51   mid green
+   --green-light  #3D8B6E   accent green
+   --cream        #F8F3EA   warm cream background
+   --cream-dark   #EDE6D8   card surface
+   --cream-border #D9CEB8   border tone
+   --charcoal     #1C1C24   near-black text
+   --slate        #4A5060   secondary text
+   --muted        #9098A8   placeholder / hint
+   --white        #FFFFFF
+   --rust         #C0392B   error
+   --leaf         #27AE60   valid / success
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Custom Properties ──────────────────── */
+:root {
+    --green:           #1E4D3A;
+    --green-mid:       #2A6B51;
+    --green-light:     #3D8B6E;
+    --green-glow:      rgba(30, 77, 58, 0.14);
+    --cream:           #F8F3EA;
+    --cream-dark:      #EDE6D8;
+    --cream-border:    #D9CEB8;
+    --charcoal:        #1C1C24;
+    --slate:           #4A5060;
+    --muted:           #9098A8;
+    --white:           #FFFFFF;
+    --rust:            #B83232;
+    --rust-bg:         #FDF2F2;
+    --leaf:            #1F7A47;
+    --leaf-bg:         #EEF8F2;
+    --radius:          9px;
+    --radius-lg:       16px;
+    --transition:      0.22s ease;
+    --shadow-card:     0 2px 4px rgba(0,0,0,0.04),
+                       0 16px 48px rgba(0,0,0,0.22);
+}
+
+/* ── Reset ──────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.65;
+    min-height: 100vh;
+    padding-bottom: 72px;
+
+    /* Page background — deep green with campus image */
+    background-color: #0D2B1F;
+    background-image:
+        linear-gradient(160deg,
+            rgba(13, 43, 31, 0.94) 0%,
+            rgba(13, 43, 31, 0.82) 50%,
+            rgba(13, 43, 31, 0.95) 100%
+        ),
+        url('../assets/campus-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* ============================================================
+   HEADER
+   Cream background — warm, editorial, premium feel
+   ============================================================ */
+.site-header {
+    background: var(--cream);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 var(--cream-border), 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Thin green bottom line */
+.site-header::after {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg,
+        var(--cream)     0%,
+        var(--green)     20%,
+        var(--green-mid) 50%,
+        var(--green)     80%,
+        var(--cream)     100%
+    );
+}
+
+.header-inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 44px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    border-left: 5px solid var(--green);
+}
+
+.header-brand h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+.header-brand h1 span {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 0.6rem;
+    letter-spacing: 5px;
+    color: var(--green-mid);
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+.header-brand p {
+    font-size: 0.67rem;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* ============================================================
+   PAGE INTRO
+   ============================================================ */
+.page-intro {
+    text-align: center;
+    padding: 56px 20px 36px;
+}
+
+.page-intro h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--cream);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+}
+
+.page-intro p {
+    color: rgba(248, 243, 234, 0.55);
+    font-size: 0.875rem;
+    margin-top: 10px;
+}
+
+.page-intro p b {
+    color: var(--cream);
+    font-weight: 600;
+}
+
+.divider-bar {
+    width: 44px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green-light), var(--green-mid));
+    border-radius: 2px;
+    margin: 18px auto 0;
+}
+
+/* ============================================================
+   FORM CARD
+   Warm cream — stands apart from the dark green background
+   ============================================================ */
+.form-card {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--cream);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section-header {
+    display: flex;
+    align-items: stretch;
+    background: var(--green);
+    position: relative;
+}
+
+/* Lighter green right-side fade */
+.section-header::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04));
+    pointer-events: none;
+}
+
+/* Left cream-coloured accent stripe */
+.section-header::before {
+    content: '';
+    width: 4px;
+    flex-shrink: 0;
+    background: var(--cream);
+    opacity: 0.35;
+}
+
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(248,243,234,0.90);
+    padding: 13px 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Small cream dot before label */
+.section-label::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--cream);
+    border-radius: 50%;
+    opacity: 0.55;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   FORM BODY
+   ============================================================ */
+.form-body {
+    padding: 28px 36px 14px;
+    background: var(--cream);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 32px;
+    margin-bottom: 8px;
+}
+
+.form-grid.three-col  { grid-template-columns: 1fr 1fr 1fr; }
+.form-grid.full-width { grid-template-columns: 1fr; }
+
+/* ── Form Group ─────────────────────────── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group > label {
+    font-size: 0.71rem;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    color: var(--charcoal);
+}
+
+.req {
+    color: var(--rust);
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+/* ── Inputs / Select / Textarea ─────────── */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-border);
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--charcoal);
+    outline: none;
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+/* Clean triangle dropdown arrow */
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239098A8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.55;
+}
+
+/* Focus — green ring */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--green-mid);
+    background: var(--white);
+    box-shadow: 0 0 0 3px var(--green-glow);
+}
+
+/* Valid */
+.form-group input.ng-valid.ng-touched,
+.form-group select.ng-valid.ng-touched,
+.form-group textarea.ng-valid.ng-touched {
+    border-color: var(--leaf);
+    background: var(--leaf-bg);
+}
+
+/* Invalid */
+.form-group input.ng-invalid.ng-touched,
+.form-group select.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched,
+.submitted .form-group input.ng-invalid,
+.submitted .form-group select.ng-invalid,
+.submitted .form-group textarea.ng-invalid {
+    border-color: var(--rust);
+    background: var(--rust-bg);
+    box-shadow: 0 0 0 3px rgba(184,50,50,0.09);
+}
+
+/* ── Error Message ──────────────────────── */
+.error-msg {
+    font-size: 0.71rem;
+    color: var(--rust);
+    font-weight: 500;
+    min-height: 15px;
+    display: block;
+}
+
+/* ── Gender — segmented control ─────────── */
+.radio-group {
+    display: flex;
+    border: 1.5px solid var(--cream-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--white);
+}
+
+.radio-tile {
+    flex: 1;
+    display: flex;
+    cursor: pointer;
+}
+
+.radio-tile input[type="radio"] {
+    display: none;
+}
+
+.radio-tile span {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-right: 1px solid var(--cream-border);
+    transition: background var(--transition), color var(--transition);
+    user-select: none;
+}
+
+.radio-tile:last-child span {
+    border-right: none;
+}
+
+.radio-tile input[type="radio"]:checked + span {
+    background: var(--green);
+    color: var(--cream);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.radio-tile:hover span {
+    background: var(--cream-dark);
+    color: var(--charcoal);
+}
+
+/* ============================================================
+   FORM ACTION BAR
+   ============================================================ */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 36px 28px;
+    background: var(--cream-dark);
+    border-top: 1px solid var(--cream-border);
+}
+
+.required-note {
+    margin-right: auto;
+    font-size: 0.71rem;
+    color: var(--muted);
+}
+
+.required-note b {
+    color: var(--rust);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 30px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+
+/* Primary — deep green */
+.btn-primary {
+    background: var(--green);
+    color: var(--cream);
+    box-shadow: 0 4px 14px rgba(30, 77, 58, 0.38);
+}
+
+.btn-primary:hover {
+    background: var(--green-mid);
+    box-shadow: 0 6px 20px rgba(30, 77, 58, 0.50);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(30, 77, 58, 0.28);
+}
+
+/* Secondary — outline */
+.btn-secondary {
+    background: transparent;
+    color: var(--slate);
+    border: 1.5px solid var(--cream-border);
+}
+
+.btn-secondary:hover {
+    background: var(--cream);
+    border-color: var(--green-light);
+    color: var(--green);
+}
+
+/* ============================================================
+   SUCCESS BANNER
+   ============================================================ */
+.success-banner {
+    background: var(--green);
+    border-top: none;
+}
+
+.success-inner {
+    padding: 32px 36px;
+}
+
+.success-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 6px;
+}
+
+.success-sub {
+    font-size: 0.84rem;
+    color: rgba(248,243,234,0.60);
+    margin-bottom: 20px;
+}
+
+/* Admission number pill */
+.admission-badge {
+    display: inline-block;
+    padding: 10px 28px;
+    border: 2px solid rgba(248,243,234,0.45);
+    border-radius: 40px;
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: rgba(248,243,234,0.08);
+    margin-bottom: 16px;
+}
+
+.success-note {
+    font-size: 0.71rem;
+    color: rgba(248,243,234,0.35);
+    font-style: italic;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+    text-align: center;
+    padding: 36px 16px 0;
+}
+
+.site-footer p {
+    font-size: 0.71rem;
+    color: rgba(248, 243, 234, 0.25);
+    letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 820px) {
+    .form-grid.three-col {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .form-grid,
+    .form-grid.three-col {
+        grid-template-columns: 1fr;
+    }
+
+    .header-inner {
+        padding: 0 20px;
+        height: 66px;
+    }
+
+    .header-brand h1 {
+        font-size: 1.25rem;
+    }
+
+    .page-intro {
+        padding: 40px 20px 28px;
+    }
+
+    .page-intro h2 {
+        font-size: 1.65rem;
+    }
+
+    .form-body {
+        padding: 22px 18px 10px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        padding: 18px 18px 24px;
+        gap: 10px;
+    }
+
+    .required-note {
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .success-inner {
+        padding: 26px 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .header-brand p { display: none; }
+    .header-brand h1 { font-size: 1.1rem; }
+}

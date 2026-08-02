@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentRegistrationApp">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Registration — GSFC University</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-brand">
+                <h1>GSFC <span>University</span></h1>
+                <p>Vadodara, Gujarat &nbsp;&middot;&nbsp; Buddhi Jnanena Shudhyati</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE INTRO -->
+    <div class="page-intro">
+        <h2>Student Registration Form</h2>
+        <p>Please fill in all required details carefully. Fields marked <b>*</b> are mandatory.</p>
+        <div class="divider-bar"></div>
+    </div>
+
+    <!-- MAIN FORM -->
+    <main ng-controller="RegistrationController">
+
+        <form name="registrationForm"
+              ng-submit="submitForm(registrationForm)"
+              ng-class="{ 'submitted': submitted }"
+              novalidate>
+
+            <div class="form-card">
+
+                <!-- SECTION 1: Personal Information -->
+                <div class="section-header">
+                    <div class="section-label">Personal Information</div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="req">*</span></label>
+                            <input type="text"
+                                   id="firstName" name="firstName"
+                                   ng-model="student.firstName"
+                                   placeholder="Enter first name"
+                                   required ng-minlength="2" ng-maxlength="50"
+                                   ng-pattern="/^[a-zA-Z\s]+$/" />
+                            <span class="error-msg" ng-show="(registrationForm.firstName.$touched || submitted) && registrationForm.firstName.$error.required">First name is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.firstName.$touched || submitted) && registrationForm.firstName.$error.minlength">Minimum 2 characters required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.firstName.$touched || submitted) && registrationForm.firstName.$error.pattern">Only alphabets are allowed.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="req">*</span></label>
+                            <input type="text"
+                                   id="lastName" name="lastName"
+                                   ng-model="student.lastName"
+                                   placeholder="Enter last name"
+                                   required ng-minlength="2" ng-maxlength="50"
+                                   ng-pattern="/^[a-zA-Z\s]+$/" />
+                            <span class="error-msg" ng-show="(registrationForm.lastName.$touched || submitted) && registrationForm.lastName.$error.required">Last name is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.lastName.$touched || submitted) && registrationForm.lastName.$error.minlength">Minimum 2 characters required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.lastName.$touched || submitted) && registrationForm.lastName.$error.pattern">Only alphabets are allowed.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="req">*</span></label>
+                            <input type="date"
+                                   id="dob" name="dob"
+                                   ng-model="student.dob"
+                                   required />
+                            <span class="error-msg" ng-show="(registrationForm.dob.$touched || submitted) && registrationForm.dob.$error.required">Date of birth is required.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gender <span class="req">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-tile">
+                                    <input type="radio" name="gender" ng-model="student.gender" value="Male" required />
+                                    <span>Male</span>
+                                </label>
+                                <label class="radio-tile">
+                                    <input type="radio" name="gender" ng-model="student.gender" value="Female" />
+                                    <span>Female</span>
+                                </label>
+                                <label class="radio-tile">
+                                    <input type="radio" name="gender" ng-model="student.gender" value="Other" />
+                                    <span>Other</span>
+                                </label>
+                            </div>
+                            <span class="error-msg" ng-show="submitted && !student.gender">Please select a gender.</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SECTION 2: Contact Information -->
+                <div class="section-header">
+                    <div class="section-label">Contact Information</div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="email">Personal Email <span class="req">*</span></label>
+                            <input type="email"
+                                   id="email" name="email"
+                                   ng-model="student.email"
+                                   placeholder="example@email.com"
+                                   required />
+                            <span class="error-msg" ng-show="(registrationForm.email.$touched || submitted) && registrationForm.email.$error.required">Email address is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.email.$touched || submitted) && registrationForm.email.$error.email">Enter a valid email address.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number <span class="req">*</span></label>
+                            <input type="tel"
+                                   id="mobile" name="mobile"
+                                   ng-model="student.mobile"
+                                   placeholder="10-digit mobile number"
+                                   required ng-pattern="/^[6-9][0-9]{9}$/" />
+                            <span class="error-msg" ng-show="(registrationForm.mobile.$touched || submitted) && registrationForm.mobile.$error.required">Mobile number is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.mobile.$touched || submitted) && registrationForm.mobile.$error.pattern">Enter a valid 10-digit Indian mobile number.</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SECTION 3: Address -->
+                <div class="section-header">
+                    <div class="section-label">Address Details</div>
+                </div>
+
+                <div class="form-body">
+
+                    <div class="form-grid full-width">
+                        <div class="form-group">
+                            <label for="address">Address <span class="req">*</span></label>
+                            <textarea id="address" name="address"
+                                      ng-model="student.address"
+                                      placeholder="House No., Street, Locality / Area"
+                                      required ng-minlength="10" rows="3"></textarea>
+                            <span class="error-msg" ng-show="(registrationForm.address.$touched || submitted) && registrationForm.address.$error.required">Address is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.address.$touched || submitted) && registrationForm.address.$error.minlength">Please enter a more complete address (min. 10 characters).</span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid three-col">
+
+                        <div class="form-group">
+                            <label for="city">City <span class="req">*</span></label>
+                            <input type="text"
+                                   id="city" name="city"
+                                   ng-model="student.city"
+                                   placeholder="City"
+                                   required ng-pattern="/^[a-zA-Z\s]+$/" />
+                            <span class="error-msg" ng-show="(registrationForm.city.$touched || submitted) && registrationForm.city.$error.required">City is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.city.$touched || submitted) && registrationForm.city.$error.pattern">Only alphabets are allowed.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State <span class="req">*</span></label>
+                            <select id="state" name="state" ng-model="student.state" required>
+                                <option value="">Select State</option>
+                                <option>Andhra Pradesh</option>
+                                <option>Arunachal Pradesh</option>
+                                <option>Assam</option>
+                                <option>Bihar</option>
+                                <option>Chhattisgarh</option>
+                                <option>Goa</option>
+                                <option>Gujarat</option>
+                                <option>Haryana</option>
+                                <option>Himachal Pradesh</option>
+                                <option>Jharkhand</option>
+                                <option>Karnataka</option>
+                                <option>Kerala</option>
+                                <option>Madhya Pradesh</option>
+                                <option>Maharashtra</option>
+                                <option>Manipur</option>
+                                <option>Meghalaya</option>
+                                <option>Mizoram</option>
+                                <option>Nagaland</option>
+                                <option>Odisha</option>
+                                <option>Punjab</option>
+                                <option>Rajasthan</option>
+                                <option>Sikkim</option>
+                                <option>Tamil Nadu</option>
+                                <option>Telangana</option>
+                                <option>Tripura</option>
+                                <option>Uttar Pradesh</option>
+                                <option>Uttarakhand</option>
+                                <option>West Bengal</option>
+                                <option>Delhi</option>
+                                <option>Jammu &amp; Kashmir</option>
+                                <option>Ladakh</option>
+                                <option>Puducherry</option>
+                            </select>
+                            <span class="error-msg" ng-show="(registrationForm.state.$touched || submitted) && registrationForm.state.$error.required">Please select a state.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pinCode">PIN Code <span class="req">*</span></label>
+                            <input type="text"
+                                   id="pinCode" name="pinCode"
+                                   ng-model="student.pinCode"
+                                   placeholder="6-digit PIN"
+                                   required ng-pattern="/^[1-9][0-9]{5}$/" />
+                            <span class="error-msg" ng-show="(registrationForm.pinCode.$touched || submitted) && registrationForm.pinCode.$error.required">PIN code is required.</span>
+                            <span class="error-msg" ng-show="(registrationForm.pinCode.$touched || submitted) && registrationForm.pinCode.$error.pattern">Enter a valid 6-digit PIN code.</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SECTION 4: Academic Information -->
+                <div class="section-header">
+                    <div class="section-label">Academic Information</div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="department">Department <span class="req">*</span></label>
+                            <select id="department" name="department" ng-model="student.department" required>
+                                <option value="">Select Department</option>
+                                <option ng-repeat="dept in departments" value="{{ dept }}">{{ dept }}</option>
+                            </select>
+                            <span class="error-msg" ng-show="(registrationForm.department.$touched || submitted) && registrationForm.department.$error.required">Please select a department.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course">Course <span class="req">*</span></label>
+                            <select id="course" name="course" ng-model="student.course" required>
+                                <option value="">Select Course</option>
+                                <option ng-repeat="c in courses" value="{{ c }}">{{ c }}</option>
+                            </select>
+                            <span class="error-msg" ng-show="(registrationForm.course.$touched || submitted) && registrationForm.course.$error.required">Please select a course.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="semester">Semester <span class="req">*</span></label>
+                            <select id="semester" name="semester" ng-model="student.semester" required>
+                                <option value="">Select Semester</option>
+                                <option ng-repeat="sem in semesters" value="{{ sem }}">{{ sem }}</option>
+                            </select>
+                            <span class="error-msg" ng-show="(registrationForm.semester.$touched || submitted) && registrationForm.semester.$error.required">Please select a semester.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="academicYear">Academic Year <span class="req">*</span></label>
+                            <select id="academicYear" name="academicYear" ng-model="student.academicYear" required>
+                                <option value="">Select Academic Year</option>
+                                <option ng-repeat="year in academicYears" value="{{ year }}">{{ year }}</option>
+                            </select>
+                            <span class="error-msg" ng-show="(registrationForm.academicYear.$touched || submitted) && registrationForm.academicYear.$error.required">Please select an academic year.</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- FORM ACTIONS -->
+                <div class="form-actions">
+                    <p class="required-note"><b>*</b> All marked fields are mandatory</p>
+                    <button type="button" class="btn btn-secondary" ng-click="resetForm(registrationForm)">Reset</button>
+                    <button type="submit" class="btn btn-primary">Submit Registration</button>
+                </div>
+
+                <!-- SUCCESS BANNER -->
+                <div class="success-banner" ng-if="registrationSuccess">
+                    <div class="success-inner">
+                        <p class="success-title">Registration Submitted Successfully</p>
+                        <p class="success-sub">Your admission number has been generated and assigned.</p>
+                        <div class="admission-badge">{{ generatedAdmissionNumber }}</div>
+                        <p class="success-note">Open browser console (F12) to view the complete registration record.</p>
+                    </div>
+                </div>
+
+            </div><!-- /.form-card -->
+
+        </form>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <p>&copy; 2026 GSFC University, Vadodara, Gujarat. All rights reserved.</p>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/registrationController.js"></script>
+
+</body>
+</html>
