@@ -27,11 +27,6 @@ const {
 } = require('../controllers/farmerOrder.controller');
 
 const {
-  getNegotiations, getNegotiationById,
-  sendCounterOffer, acceptNegotiation, rejectNegotiation,
-} = require('../controllers/farmerNegotiation.controller');
-
-const {
   getMyConsultations, getConsultationById, createConsultation, cancelConsultation,
 } = require('../controllers/farmerConsultation.controller');
 
@@ -92,13 +87,6 @@ router.get('/analytics',                 getSalesAnalytics);   // before /orders
 router.get('/orders/:id',                getOrderById);
 router.patch('/orders/:id/status',       updateOrderStatus);
 router.get('/orders/:id/tracking',       getOrderTracking);
-
-// ── Negotiations ───────────────────────────────────────────────────────────────
-router.get('/negotiations',                getNegotiations);
-router.get('/negotiations/:id',            getNegotiationById);
-router.patch('/negotiations/:id/counter',  sendCounterOffer);
-router.patch('/negotiations/:id/accept',   acceptNegotiation);
-router.patch('/negotiations/:id/reject',   rejectNegotiation);
 
 // ── Consultations ────────────────────────────────────────────────────────────
 router.get('/consultations',              getMyConsultations);

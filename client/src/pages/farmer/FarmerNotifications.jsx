@@ -5,8 +5,7 @@ import Pagination from '../../components/admin/Pagination';
 const ACCENT = '#1a6b1a';
 const TYPE_ICONS = {
   new_order:'📦', order_confirmed:'✅', order_shipped:'🚚', order_delivered:'🎉', order_cancelled:'🚫',
-  order_status:'🔄', negotiation_received:'🤝', negotiation_countered:'💬', negotiation_accepted:'✅',
-  negotiation_rejected:'❌', new_message:'💬', system:'🔔', content:'📰', order_status_updated:'🔄',
+  order_status:'🔄', new_message:'💬', system:'🔔', content:'📰', order_status_updated:'🔄',
 };
 
 const FarmerNotifications = () => {

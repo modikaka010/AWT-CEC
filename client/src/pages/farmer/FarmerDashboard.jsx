@@ -54,7 +54,6 @@ const FarmerDashboard = () => {
 
   const stats = dashboardData?.stats || {};
   const recentOrders = dashboardData?.recentOrders || [];
-  const recentNeg = dashboardData?.recentNegotiations || [];
 
   // Analytics chart data
   const trendData = (analyticsData?.monthlyRevenue || []).map((t) => ({
@@ -159,27 +158,6 @@ const FarmerDashboard = () => {
                       <p style={{ fontWeight:700, fontSize:'0.85rem', color:'#1a6b1a', margin:0 }}>₹{o.totalAmount?.toLocaleString('en-IN')}</p>
                       <StatusBadge status={o.status} size="xs" />
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Recent negotiations */}
-            <div style={{ background:'#fff', border:'1px solid var(--color-border)', borderRadius:'var(--radius-xl)', padding:'1.25rem' }}>
-              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1rem' }}>
-                <h3 style={{ fontWeight:700, fontSize:'0.95rem', margin:0 }}>🤝 Recent Negotiations</h3>
-                <button onClick={() => navigate('/farmer/negotiations')} style={{ fontSize:'0.75rem', color:'#1a6b1a', fontWeight:600, background:'none', border:'none', cursor:'pointer' }}>View all →</button>
-              </div>
-              {recentNeg.length === 0 ? (
-                <p style={{ color:'var(--color-text-muted)', fontSize:'0.8rem', textAlign:'center', padding:'1rem 0' }}>No negotiations yet.</p>
-              ) : (
-                recentNeg.map((n) => (
-                  <div key={n._id} onClick={() => navigate(`/farmer/negotiations/${n._id}`)} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'0.6rem 0', borderBottom:'1px solid var(--color-border)', cursor:'pointer' }}>
-                    <div>
-                      <p style={{ fontWeight:600, fontSize:'0.8rem', margin:0 }}>{n.productName}</p>
-                      <p style={{ fontSize:'0.7rem', color:'var(--color-text-muted)', margin:0 }}>{n.buyer?.name} · ₹{n.currentPrice}</p>
-                    </div>
-                    <StatusBadge status={n.status} size="xs" />
                   </div>
                 ))
               )}

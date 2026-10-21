@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
-const Negotiation = require('../models/Negotiation');
 const Notification = require('../models/Notification');
 const Message = require('../models/Message');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
@@ -24,11 +23,9 @@ const getDashboardStats = async (req, res) => {
       activeOrders,
       completedOrders,
       cancelledOrders,
-      activeNegotiations,
       unreadMessages,
       unreadNotifications,
       recentOrders,
-      recentNegotiations,
       revenueAgg,
     ] = await Promise.all([
       Product.countDocuments({ farmer: farmerId }),
@@ -39,19 +36,12 @@ const getDashboardStats = async (req, res) => {
       Order.countDocuments({ farmer: farmerId, status: { $in: ['confirmed', 'processing', 'shipped'] } }),
       Order.countDocuments({ farmer: farmerId, status: 'delivered' }),
       Order.countDocuments({ farmer: farmerId, status: 'cancelled' }),
-      Negotiation.countDocuments({ farmer: farmerId, status: { $in: ['pending', 'countered'] } }),
       Message.countDocuments({ receiver: farmerId, isRead: false }),
       Notification.countDocuments({ recipient: farmerId, isRead: false }),
       Order.find({ farmer: farmerId })
         .populate('buyer', 'name loginId')
         .select('buyer totalAmount status createdAt items')
         .sort({ createdAt: -1 })
-        .limit(5)
-        .lean(),
-      Negotiation.find({ farmer: farmerId })
-        .populate('buyer', 'name loginId')
-        .select('buyer productName currentPrice currentQuantity status updatedAt')
-        .sort({ updatedAt: -1 })
         .limit(5)
         .lean(),
       Order.aggregate([
@@ -72,13 +62,11 @@ const getDashboardStats = async (req, res) => {
         activeOrders,
         completedOrders,
         cancelledOrders,
-        activeNegotiations,
         unreadMessages,
         unreadNotifications,
         totalRevenue,
       },
       recentOrders,
-      recentNegotiations,
     });
   } catch (err) {
     console.error('farmer getDashboardStats error:', err);

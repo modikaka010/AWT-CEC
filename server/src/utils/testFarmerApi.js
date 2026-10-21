@@ -40,7 +40,6 @@ async function run() {
   await req('/api/farmer/products/categories',  farmerToken);
   await req('/api/farmer/orders',               farmerToken);
   await req('/api/farmer/analytics',            farmerToken);
-  await req('/api/farmer/negotiations',         farmerToken);
   await req('/api/farmer/chat/conversations',   farmerToken);
   await req('/api/farmer/notifications',        farmerToken);
 
