@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductById, addToCart, createNegotiation } from '../../../services/buyerService';
+import { getProductById, addToCart } from '../../../services/buyerService';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -12,12 +12,7 @@ const ProductDetail = () => {
   const [cartMsg, setCartMsg] = useState('');
   const [cartLoading, setCartLoading] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
-  const [showNegotiateForm, setShowNegotiateForm] = useState(false);
-  const [negotiateData, setNegotiateData] = useState({ offerPrice:'', quantity:1, message:'' });
-  const [negError, setNegError] = useState('');
-  const [negSuccess, setNegSuccess] = useState('');
-  const [negLoading, setNegLoading] = useState(false);
-
+  
   useEffect(() => {
     getProductById(id)
       .then((res) => setProduct(res.data.data.product))
@@ -47,28 +42,7 @@ const ProductDetail = () => {
     } finally { setCartLoading(false); }
   };
 
-  const handleNegotiate = async (e) => {
-    e.preventDefault();
-    setNegError(''); setNegSuccess('');
-    if (!negotiateData.offerPrice || parseFloat(negotiateData.offerPrice) <= 0) {
-      setNegError('Please enter a valid offer price.'); return;
-    }
-    setNegLoading(true);
-    try {
-      const res = await createNegotiation({
-        productId: id,
-        quantity: parseInt(negotiateData.quantity) || qty,
-        offerPrice: parseFloat(negotiateData.offerPrice),
-        message: negotiateData.message,
-      });
-      setNegSuccess('Negotiation started! The farmer will respond soon.');
-      setShowNegotiateForm(false);
-      setTimeout(() => setNegSuccess(''), 4000);
-    } catch (e) {
-      setNegError(e.response?.data?.message || 'Failed to start negotiation.');
-    } finally { setNegLoading(false); }
-  };
-
+  
   const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) : '—';
 
   if (loading) return <div style={{ padding:'2rem', textAlign:'center', color:'var(--color-text-muted)' }}>Loading…</div>;
@@ -154,48 +128,9 @@ const ProductDetail = () => {
             <button onClick={handleBuyNow} disabled={cartLoading} className="btn btn-primary btn-sm" style={{ flex:1, minWidth:120 }}>
               ⚡ Buy Now
             </button>
-            <button onClick={() => { setShowNegotiateForm((s) => !s); setNegotiateData((d) => ({ ...d, offerPrice:'', quantity:qty })); }} className="btn btn-secondary btn-sm" style={{ flex:1, minWidth:120 }}>
-              🤝 Negotiate
-            </button>
           </div>
         </div>
       </div>
-
-      {/* Negotiate form */}
-      {showNegotiateForm && (
-        <div style={{ background:'#fff', border:'2px solid #c4840e', borderRadius:'var(--radius-xl)', padding:'1.5rem', marginTop:'1.25rem' }}>
-          <h3 style={{ fontWeight:700, fontSize:'1rem', color:'#c4840e', margin:'0 0 1rem' }}>🤝 Start Negotiation</h3>
-          <p style={{ fontSize:'0.8rem', color:'var(--color-text-muted)', margin:'0 0 1rem' }}>
-            Listed price: <strong>₹{product.price?.toLocaleString('en-IN')} {product.priceUnit}</strong>
-          </p>
-          {negError && <div className="alert alert-error" style={{ marginBottom:'0.875rem' }}>{negError}</div>}
-          <form onSubmit={handleNegotiate}>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
-              <div className="form-group" style={{ marginBottom:0 }}>
-                <label className="form-label">Your Offer Price (₹) *</label>
-                <input className="form-input" type="number" step="0.01" min="1" placeholder={`e.g. ${Math.round(product.price * 0.9)}`}
-                  value={negotiateData.offerPrice} onChange={(e) => setNegotiateData((d) => ({ ...d, offerPrice:e.target.value }))} />
-              </div>
-              <div className="form-group" style={{ marginBottom:0 }}>
-                <label className="form-label">Quantity ({product.quantityUnit})</label>
-                <input className="form-input" type="number" min="1" max={product.quantity}
-                  value={negotiateData.quantity} onChange={(e) => setNegotiateData((d) => ({ ...d, quantity:e.target.value }))} />
-              </div>
-            </div>
-            <div className="form-group" style={{ marginTop:'1rem' }}>
-              <label className="form-label">Message (optional)</label>
-              <textarea className="form-input" rows={2} placeholder="Explain your offer or requirements…"
-                value={negotiateData.message} onChange={(e) => setNegotiateData((d) => ({ ...d, message:e.target.value }))} style={{ resize:'vertical' }} />
-            </div>
-            <div style={{ display:'flex', gap:'0.625rem' }}>
-              <button type="submit" disabled={negLoading} className="btn btn-sm" style={{ background:'#c4840e', color:'#fff', borderColor:'#c4840e', minWidth:130 }}>
-                {negLoading ? 'Sending…' : 'Send Offer'}
-              </button>
-              <button type="button" onClick={() => setShowNegotiateForm(false)} className="btn btn-secondary btn-sm">Cancel</button>
-            </div>
-          </form>
-        </div>
-      )}
 
       {/* Farmer info */}
       <div style={{ background:'#fff', border:'1px solid var(--color-border)', borderRadius:'var(--radius-xl)', padding:'1.5rem', marginTop:'1.25rem' }}>
