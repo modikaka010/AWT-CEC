@@ -17,10 +17,6 @@ const { getCart, addToCart, updateCartItem, removeFromCart, clearCart } = requir
 
 const { createOrder, getOrders, getOrderById, cancelOrder, getOrderTracking } = require('../controllers/order.controller');
 
-const {
-  createNegotiation, getNegotiations, getNegotiationById,
-  sendCounterOffer, acceptNegotiation, rejectNegotiation, cancelNegotiation,
-} = require('../controllers/negotiation.controller');
 
 const { getChatUsers, getConversations, getMessages, sendMessage } = require('../controllers/chat.controller');
 
