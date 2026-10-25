@@ -1,0 +1,364 @@
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #faf7ed;
+  isolation: isolate;
+  z-index: 99999;
+}
+
+/* Full-screen falling leaf layer */
+.leaves-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Leaf sizing and animation defaults */
+.falling-leaf {
+  position: absolute;
+  top: -220px;
+  left: var(--left);
+  display: block;
+  width: var(--size);
+  height: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+  animation: leafFall var(--duration) linear var(--delay) infinite;
+}
+
+/* 12 leaves spread from the left edge to the right edge */
+.leaf-1 {
+  --left: 1%;
+  --size: 150px;
+  --duration: 9s;
+  --delay: 0s;
+  --drift: 100px;
+  --spin: 360deg;
+}
+
+.leaf-2 {
+  --left: 10%;
+  --size: 125px;
+  --duration: 11s;
+  --delay: -5s;
+  --drift: -90px;
+  --spin: -300deg;
+}
+
+.leaf-3 {
+  --left: 19%;
+  --size: 170px;
+  --duration: 10s;
+  --delay: -2s;
+  --drift: 120px;
+  --spin: 420deg;
+}
+
+.leaf-4 {
+  --left: 28%;
+  --size: 135px;
+  --duration: 12s;
+  --delay: -7s;
+  --drift: -100px;
+  --spin: -360deg;
+}
+
+.leaf-5 {
+  --left: 37%;
+  --size: 160px;
+  --duration: 9.5s;
+  --delay: -3s;
+  --drift: 110px;
+  --spin: 320deg;
+}
+
+.leaf-6 {
+  --left: 46%;
+  --size: 130px;
+  --duration: 11s;
+  --delay: -8s;
+  --drift: -120px;
+  --spin: -420deg;
+}
+
+.leaf-7 {
+  --left: 55%;
+  --size: 175px;
+  --duration: 10s;
+  --delay: -4s;
+  --drift: 90px;
+  --spin: 360deg;
+}
+
+.leaf-8 {
+  --left: 64%;
+  --size: 140px;
+  --duration: 12s;
+  --delay: -9s;
+  --drift: -110px;
+  --spin: -320deg;
+}
+
+.leaf-9 {
+  --left: 73%;
+  --size: 165px;
+  --duration: 9s;
+  --delay: -1s;
+  --drift: 100px;
+  --spin: 400deg;
+}
+
+.leaf-10 {
+  --left: 81%;
+  --size: 130px;
+  --duration: 11s;
+  --delay: -6s;
+  --drift: -100px;
+  --spin: -360deg;
+}
+
+.leaf-11 {
+  --left: 89%;
+  --size: 155px;
+  --duration: 10s;
+  --delay: -3.5s;
+  --drift: -120px;
+  --spin: 420deg;
+}
+
+.leaf-12 {
+  --left: 95%;
+  --size: 115px;
+  --duration: 12s;
+  --delay: -7.5s;
+  --drift: -90px;
+  --spin: -360deg;
+}
+
+/* Leaves travel from above the viewport to below it */
+@keyframes leafFall {
+  0% {
+    transform: translate3d(0, -20vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  25% {
+    transform: translate3d(calc(var(--drift) * 0.5), 25vh, 0)
+      rotate(calc(var(--spin) * 0.25));
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(calc(var(--drift) * -0.4), 55vh, 0)
+      rotate(calc(var(--spin) * 0.5));
+    opacity: 1;
+  }
+
+  75% {
+    transform: translate3d(calc(var(--drift) * 0.6), 85vh, 0)
+      rotate(calc(var(--spin) * 0.75));
+    opacity: 1;
+  }
+
+  95% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(var(--drift), 120vh, 0)
+      rotate(var(--spin));
+    opacity: 0;
+  }
+}
+
+/* Center logo */
+.loader-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  text-align: center;
+  animation: logoAppear 0.8s ease-out both;
+}
+
+.avelia-logo {
+  display: block;
+  width: clamp(150px, 24vw, 220px);
+  max-width: 75vw;
+  max-height: 30vh;
+  height: auto;
+  object-fit: contain;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.loading-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  color: #1f4d3a;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6faf7b;
+  animation: dotBounce 1s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes logoAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dotBounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* Responsive screens */
+@media (max-width: 600px) {
+  .leaf-1,
+  .leaf-3,
+  .leaf-5,
+  .leaf-7,
+  .leaf-9,
+  .leaf-11 {
+    --size: 100px;
+  }
+
+  .leaf-2,
+  .leaf-4,
+  .leaf-6,
+  .leaf-8,
+  .leaf-10,
+  .leaf-12 {
+    --size: 80px;
+  }
+
+  .avelia-logo {
+    width: 150px;
+  }
+
+  .loading-info {
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 500px) {
+  .avelia-logo {
+    width: 110px;
+    max-height: 22vh;
+  }
+
+  .loading-info {
+    margin-top: 12px;
+    gap: 8px;
+  }
+}
+
+
+/* Loading bar below the logo */
+.loading-bar {
+  width: 220px;
+  max-width: 70vw;
+  height: 6px;
+  margin-top: 24px;
+  overflow: hidden;
+  border-radius: 50px;
+  background: rgba(31, 77, 58, 0.15);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Green progress animation */
+.loading-bar-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6faf7b, #9bd323);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: loadingProgress 6s linear forwards;
+  box-shadow: 0 0 8px rgba(36, 101, 48, 0.35);
+}
+
+@keyframes loadingProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Mobile adjustment */
+@media (max-width: 600px) {
+  .loading-bar {
+    width: 180px;
+    height: 5px;
+    margin-top: 20px;
+  }
+}
