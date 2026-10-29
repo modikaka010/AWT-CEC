@@ -340,7 +340,7 @@
   background: linear-gradient(90deg, #6faf7b, #9bd323);
   transform: scaleX(0);
   transform-origin: left center;
-  animation: loadingProgress 6s linear forwards;
+  animation: loadingProgress 2s linear forwards;
   box-shadow: 0 0 8px rgba(36, 101, 48, 0.35);
 }
 

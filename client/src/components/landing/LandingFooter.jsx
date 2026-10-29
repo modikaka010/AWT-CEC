@@ -193,7 +193,7 @@ const LandingFooter = () => {
             <Link to="/#about-preview"> About Us</Link>
             <Link to="/#help-preview"> Privacy & Terms</Link>
             <Link to="/#schemes-preview"> Gov Schemes</Link>
-            <Link to="/admin-login" style={{ color: 'rgba(255, 255, 255, 0.55)' }}>Admin</Link>
+            <Link to="/admin-login">Admin</Link>
           </div>
         </div>
       </div>

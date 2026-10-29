@@ -134,14 +134,14 @@ body {
   overflow-x: hidden;
   transition: background-color var(--transition-slow), color var(--transition-slow);
 }
-h1{
+h1,h3{
   font-family: var(--font-heading);
   color: var(--color-text-light);
   line-height: 1.2;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
-h2, h3, h4, h5, h6 {
+h2, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--color-text);
   line-height: 1.25;
