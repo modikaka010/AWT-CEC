@@ -59,8 +59,6 @@ const ProductDetail = () => {
       {cartMsg && (
         <div className={`alert ${cartMsg.includes('Failed') ? 'alert-error' : 'alert-success'}`} style={{ marginBottom:'1rem' }}>{cartMsg}</div>
       )}
-      {negSuccess && <div className="alert alert-success" style={{ marginBottom:'1rem' }}>{negSuccess}</div>}
-
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem' }}>
         {/* Images */}
         <div>
